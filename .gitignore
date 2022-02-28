@@ -1,0 +1,8 @@
+/*
+*tfstate*
+.terraform
+task*
+!terraform/
+!terraform/*
+!README.md
+!.gitignore

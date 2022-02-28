@@ -4,6 +4,6 @@
 task*
 *key*
 !terraform/
-!terraform/*
+
 !README.md
 !.gitignore

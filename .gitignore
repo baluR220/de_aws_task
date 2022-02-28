@@ -2,6 +2,7 @@
 *tfstate*
 .terraform
 task*
+*key*
 !terraform/
 !terraform/*
 !README.md

@@ -1,6 +1,6 @@
 resource "aws_vpc" "wp" {
-  cidr_block          = "192.168.0.0/16"
-  enable_dns_support  = true
+  cidr_block           = "192.168.0.0/16"
+  enable_dns_support   = true
   enable_dns_hostnames = true
 
   tags = {
@@ -127,17 +127,6 @@ resource "aws_security_group_rule" "in_http_ec2" {
   security_group_id = aws_security_group.sg_for_ec2.id
 }
 
-resource "aws_security_group_rule" "in_https_ec2" {
-  type              = "ingress"
-  description       = "https from all"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = ["::/0"]
-  security_group_id = aws_security_group.sg_for_ec2.id
-}
-
 resource "aws_security_group_rule" "out_all_ec2" {
   type              = "egress"
   from_port         = 0
@@ -149,13 +138,13 @@ resource "aws_security_group_rule" "out_all_ec2" {
 }
 
 resource "aws_security_group_rule" "in_nfs_efs" {
-  type                      = "ingress"
-  description               = "nfs from sg_for_ec2"
-  from_port                 = 2049
-  to_port                   = 2049
-  protocol                  = "tcp"
-  source_security_group_id  = aws_security_group.sg_for_ec2.id
-  security_group_id         = aws_security_group.sg_for_efs.id
+  type                     = "ingress"
+  description              = "nfs from sg_for_ec2"
+  from_port                = 2049
+  to_port                  = 2049
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.sg_for_ec2.id
+  security_group_id        = aws_security_group.sg_for_efs.id
 }
 
 resource "aws_security_group_rule" "out_all_efs" {
@@ -167,3 +156,15 @@ resource "aws_security_group_rule" "out_all_efs" {
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.sg_for_efs.id
 }
+/*
+resource "aws_security_group_rule" "in_https_ec2" {
+  type              = "ingress"
+  description       = "https from all"
+  from_port         = 443
+  to_port           = 443
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.sg_for_ec2.id
+}
+*/

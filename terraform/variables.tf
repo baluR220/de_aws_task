@@ -12,8 +12,8 @@ variable "db_secret" {
   nullable    = false
 }
 
-variable "pub_key_path" {
-  description = "Path to ssh public key"
+variable "local_pub_key_path" {
+  description = "Path to local ssh public key"
   type        = string
   sensitive   = true
   nullable    = false

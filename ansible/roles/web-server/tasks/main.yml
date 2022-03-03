@@ -1,0 +1,31 @@
+---
+- name: install apache package
+  apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: copy conf file from template
+  template:
+    src: apache2.conf.j2
+    dest: /etc/apache2/apache2.conf
+  notify: "restart apache"
+
+- name: start apache service
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+
+- name: disable mpm_event module
+  apache2_module:
+    name: mpm_event
+    state: absent
+  notify: "restart apache"
+
+- name: enable php7.4 module
+  apache2_module:
+    name: php7.4
+    state: present
+  notify: "restart apache"
+

@@ -1,0 +1,25 @@
+---
+- name: install dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ dependencies }}"
+
+- name: create /srv/www dir
+  file:
+    path: /srv/www
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: copy wordpress.tar.gz to node and unpack it
+  unarchive:
+    src: wordpress.tar.gz
+    dest: /srv/www
+    owner: www-data
+    group: www-data
+
+- name: copy wp-config.php
+  template:
+    src: wp-config.php.j2
+    dest: /srv/www/wordpress/wp-config.php

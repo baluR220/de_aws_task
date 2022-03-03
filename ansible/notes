@@ -1,0 +1,8 @@
+control node
+	- install ansible
+	- ssh-keygen && ssh-copy-id (done with terraform)
+	- download wordpress.tar.gz
+	- put info into templates
+
+managed node
+	- sudo w/o password (deafult in aws ec2)

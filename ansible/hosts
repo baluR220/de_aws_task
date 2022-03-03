@@ -1,0 +1,8 @@
+all:
+  hosts:
+  children:
+    wp:
+      hosts:
+        node-2:
+          ansible_host: 192.168.122.140
+      

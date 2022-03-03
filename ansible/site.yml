@@ -1,0 +1,9 @@
+---
+- name: Prepare wordpress app
+  hosts: wp
+  gather_facts: False
+  roles:
+    - wordpress-app
+    - web-server
+    - nfs-client
+    - mysql-client

@@ -1,10 +1,10 @@
 /*
 *tfstate*
 .terraform
-task*
 *key*
 !terraform/
 !setup.sh
 !README.md
 !.gitignore
 !ansible/
+!ansible/*

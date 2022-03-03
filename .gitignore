@@ -7,3 +7,4 @@ task*
 !setup.sh
 !README.md
 !.gitignore
+!ansible/

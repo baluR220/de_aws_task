@@ -2,6 +2,12 @@
 - name: Prepare wordpress app
   hosts: wp
   gather_facts: False
+
+  pre_tasks:
+    - name: update apt cache
+      apt:
+        update_cache: yes
+
   roles:
     - wordpress-app
     - web-server

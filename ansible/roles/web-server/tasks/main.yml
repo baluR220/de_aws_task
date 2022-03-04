@@ -3,7 +3,6 @@
   apt:
     name: apache2
     state: present
-    update_cache: yes
 
 - name: copy conf file from template
   template:
@@ -14,7 +13,7 @@
 - name: start apache service
   service:
     name: apache2
-    state: started
+    state: restarted
     enabled: yes
 
 - name: disable mpm_event module

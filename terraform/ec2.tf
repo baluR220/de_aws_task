@@ -49,7 +49,7 @@ resource "aws_instance" "wp_ec2" {
   }
 
   provisioner "local-exec" {
-    command = "${path.module}/local_script.sh ${aws_instance.wp_ec2.public_ip} ${path.module}"
+    command = "${path.module}/local_script.sh ${aws_instance.wp_ec2.public_ip} ${path.module} ${aws_db_instance.wp.endpoint}"
   }
 }
 
@@ -58,8 +58,9 @@ resource "aws_instance" "wp_s1" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.ec2_key.id
   subnet_id              = aws_subnet.wp_west_2a.id
-  vpc_security_group_ids = [aws_security_group.sg_for_ec2.id]
+  vpc_security_group_ids = [aws_security_group.sg_for_serv.id]
   private_ip             = "192.168.1.100"
+  associate_public_ip_address = true
 
   tags = {
     Name = "wp_s1"
@@ -71,8 +72,9 @@ resource "aws_instance" "wp_s2" {
   instance_type          = "t2.micro"
   key_name               = aws_key_pair.ec2_key.id
   subnet_id              = aws_subnet.wp_west_2b.id
-  vpc_security_group_ids = [aws_security_group.sg_for_ec2.id]
+  vpc_security_group_ids = [aws_security_group.sg_for_serv.id]
   private_ip             = "192.168.2.100"
+  associate_public_ip_address = true
 
   tags = {
     Name = "wp_s2"

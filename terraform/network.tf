@@ -64,6 +64,16 @@ resource "aws_security_group" "sg_for_ec2" {
   }
 }
 
+resource "aws_security_group" "sg_for_serv" {
+  name        = "sg_for_serv"
+  description = "Security group for serv instance"
+  vpc_id      = aws_vpc.wp.id
+
+  tags = {
+    Name = "sg_for_ec2"
+  }
+}
+
 resource "aws_security_group" "sg_for_db" {
   name        = "sg_for_db"
   description = "Security group for db instance"
@@ -116,17 +126,6 @@ resource "aws_security_group_rule" "in_ssh_ec2" {
   security_group_id = aws_security_group.sg_for_ec2.id
 }
 
-resource "aws_security_group_rule" "in_http_ec2" {
-  type              = "ingress"
-  description       = "http from all"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"]
-  ipv6_cidr_blocks  = ["::/0"]
-  security_group_id = aws_security_group.sg_for_ec2.id
-}
-
 resource "aws_security_group_rule" "out_all_ec2" {
   type              = "egress"
   from_port         = 0
@@ -137,13 +136,23 @@ resource "aws_security_group_rule" "out_all_ec2" {
   security_group_id = aws_security_group.sg_for_ec2.id
 }
 
-resource "aws_security_group_rule" "in_nfs_efs" {
+resource "aws_security_group_rule" "in_nfs_efs_ec2" {
   type                     = "ingress"
   description              = "nfs from sg_for_ec2"
   from_port                = 2049
   to_port                  = 2049
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.sg_for_ec2.id
+  security_group_id        = aws_security_group.sg_for_efs.id
+}
+
+resource "aws_security_group_rule" "in_nfs_efs_serv" {
+  type                     = "ingress"
+  description              = "nfs from sg_for_serv"
+  from_port                = 2049
+  to_port                  = 2049
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.sg_for_serv.id
   security_group_id        = aws_security_group.sg_for_efs.id
 }
 
@@ -156,15 +165,33 @@ resource "aws_security_group_rule" "out_all_efs" {
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.sg_for_efs.id
 }
-/*
-resource "aws_security_group_rule" "in_https_ec2" {
-  type              = "ingress"
-  description       = "https from all"
-  from_port         = 443
-  to_port           = 443
-  protocol          = "tcp"
+
+resource "aws_security_group_rule" "in_ssh_serv" {
+  type                     = "ingress"
+  description              = "ssh from ec2"
+  from_port                = 22
+  to_port                  = 22
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.sg_for_ec2.id
+  security_group_id        = aws_security_group.sg_for_serv.id
+}
+
+resource "aws_security_group_rule" "in_http_serv" {
+  type                     = "ingress"
+  description              = "http from ec2"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.sg_for_ec2.id
+  security_group_id        = aws_security_group.sg_for_serv.id
+}
+
+resource "aws_security_group_rule" "out_all_serv" {
+  type              = "egress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = ["::/0"]
-  security_group_id = aws_security_group.sg_for_ec2.id
+  security_group_id = aws_security_group.sg_for_serv.id
 }
-*/

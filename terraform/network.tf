@@ -94,6 +94,16 @@ resource "aws_security_group" "sg_for_efs" {
   }
 }
 
+resource "aws_security_group" "sg_for_alb" {
+  name        = "sg_for_alb"
+  description = "Security group for application load balancer"
+  vpc_id      = aws_vpc.wp.id
+
+  tags = {
+    Name = "sg_for_alb"
+  }
+}
+
 resource "aws_security_group_rule" "in_mysql_db" {
   type              = "ingress"
   description       = "mysql from all"
@@ -176,13 +186,23 @@ resource "aws_security_group_rule" "in_ssh_serv" {
   security_group_id        = aws_security_group.sg_for_serv.id
 }
 
-resource "aws_security_group_rule" "in_http_serv" {
+resource "aws_security_group_rule" "in_http_serv_from_ec2" {
   type                     = "ingress"
   description              = "http from ec2"
   from_port                = 80
   to_port                  = 80
   protocol                 = "tcp"
   source_security_group_id = aws_security_group.sg_for_ec2.id
+  security_group_id        = aws_security_group.sg_for_serv.id
+}
+
+resource "aws_security_group_rule" "in_http_serv_from_alb" {
+  type                     = "ingress"
+  description              = "http from alb"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.sg_for_alb.id
   security_group_id        = aws_security_group.sg_for_serv.id
 }
 
@@ -194,4 +214,24 @@ resource "aws_security_group_rule" "out_all_serv" {
   cidr_blocks       = ["0.0.0.0/0"]
   ipv6_cidr_blocks  = ["::/0"]
   security_group_id = aws_security_group.sg_for_serv.id
+}
+
+resource "aws_security_group_rule" "out_http_alb" {
+  type                     = "egress"
+  description              = "http to serv"
+  from_port                = 80
+  to_port                  = 80
+  protocol                 = "tcp"
+  source_security_group_id = aws_security_group.sg_for_serv.id
+  security_group_id        = aws_security_group.sg_for_alb.id
+}
+
+resource "aws_security_group_rule" "in_all_alb" {
+  type              = "ingress"
+  from_port         = 0
+  to_port           = 0
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.sg_for_alb.id
 }

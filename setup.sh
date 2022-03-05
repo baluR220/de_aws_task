@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+php_conf='../ansible/roles/wordpress-app/files'
+
 if ! [ $PUB_KEY ]
 then
     pub_key_path=$HOME/.ssh/id_rsa.pub
@@ -16,7 +18,7 @@ then
     if [ $1 == "destroy" ]
     then
         rm ec2_key.pub
-        rm ../ansible/roles/wordpress-app/templates/wp-config.php.j2
+        rm "$php_conf"/wp-config.php
         rm ../ansible/wordpress.tar.gz
         rm envs.sh
     fi
@@ -26,12 +28,12 @@ then
         source envs.sh
         curl https://wordpress.org/latest.tar.gz --output ../ansible/wordpress.tar.gz
         SALT="$(curl https://api.wordpress.org/secret-key/1.1/salt/)"
-        cp ../ansible/roles/wordpress-app/templates/wp-config-sample.php.j2 ../ansible/roles/wordpress-app/templates/wp-config.php.j2
-        sed -i 's/database_name_here/wp-app/' ../ansible/roles/wordpress-app/templates/wp-config.php.j2
-        sed -i 's/username_here/'$DB_USER'/' ../ansible/roles/wordpress-app/templates/wp-config.php.j2
-        sed -i 's/password_here/'$DB_SECRET'/' ../ansible/roles/wordpress-app/templates/wp-config.php.j2
-        sed -i 's/db_host_here/'$DB_DNS_NAME'/' ../ansible/roles/wordpress-app/templates/wp-config.php.j2
-        echo $SALT >> ../ansible/roles/wordpress-app/templates/wp-config.php.j2
+        cp "$php_conf"/wp-config-sample.php "$php_conf"/wp-config.php
+        sed -i 's/database_name_here/wp_app/' "$php_conf"/wp-config.php
+        sed -i 's/username_here/'$DB_USER'/' "$php_conf"/wp-config.php
+        sed -i 's/password_here/'$DB_SECRET'/' "$php_conf"/wp-config.php
+        sed -i 's/db_host_here/'$DB_DNS_NAME'/' "$php_conf"/wp-config.php
+        echo $SALT >> "$php_conf"/templates/wp-config.php
 
         scp -r ../ansible ubuntu@$EC2_IP:/home/ubuntu
         ssh ubuntu@$EC2_IP 'sudo apt update && sudo apt install ansible -y;'

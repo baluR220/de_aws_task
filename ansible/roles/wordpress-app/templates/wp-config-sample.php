@@ -76,8 +76,8 @@ define( 'WP_DEBUG', false );
 
 /* Add any custom values between this line and the "stop editing" line. */
 
-define('WP_HOME','dns_name_here');
-define('WP_SITEURL','dns_name_here');
+define('WP_HOME','{{inventory_hostname}}');
+define('WP_SITEURL','{{inventory_hostname}}');
 
 
 /* That's all, stop editing! Happy publishing. */

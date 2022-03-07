@@ -3,3 +3,18 @@
   apt:
     name: nfs-common
     state: present
+
+- name: put line in fstab
+  lineinfile:
+    path: /etc/fstab
+    line: "{{ nfs_fstab }}"
+
+- name: create uploads directory
+  file:
+    path: /srv/www/wordpress/wp-content/uploads
+    state: directory
+    owner: www-data
+    group: www-data
+
+- name: mount nfs 
+  command: mount /srv/www/wordpress/wp-content/uploads

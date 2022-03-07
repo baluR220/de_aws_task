@@ -61,9 +61,13 @@ resource "aws_instance" "wp_s1" {
   vpc_security_group_ids = [aws_security_group.sg_for_serv.id]
   private_ip             = "192.168.1.100"
   associate_public_ip_address = true
+  depends_on             = [aws_instance.wp_s2, aws_efs_file_system.wp]
 
   tags = {
     Name = "wp_s1"
+  }
+  provisioner "local-exec" {
+    command = "echo S1_DNS=${aws_instance.wp_s1.private_dns} S2_DNS=${aws_instance.wp_s2.private_dns} EFS_DNS=${aws_efs_file_system.wp.dns_name} >> ${path.module}/envs.sh"
   }
 }
 

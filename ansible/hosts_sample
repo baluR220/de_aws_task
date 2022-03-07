@@ -1,0 +1,8 @@
+all:
+  hosts:
+  children:
+    wp:
+      hosts:
+        s1_name_here:
+        s2_name_here:
+      

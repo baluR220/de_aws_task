@@ -20,6 +20,8 @@
     group: www-data
 
 - name: copy wp-config.php
-  template:
-    src: wp-config.php.j2
+  copy:
+    src: wp-config.php
     dest: /srv/www/wordpress/wp-config.php
+    owner: www-data
+    group: www-data

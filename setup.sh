@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-php_conf='../ansible/roles/wordpress-app/files'
+php_conf='../ansible/roles/wordpress-app/templates'
 nfs_vars='../ansible/roles/nfs-client/vars'
+script_dir=$(dirname "$0")
 
 if ! [ $PUB_KEY ]
 then
@@ -12,7 +13,7 @@ fi
 
 if [ -f $pub_key_path ]
 then
-    cd terraform
+    cd "$script_dir"/terraform
     TF_VAR_local_pub_key_path=$pub_key_path TF_VAR_db_user=$DB_USER \
     TF_VAR_db_secret=$DB_SECRET terraform $*
 

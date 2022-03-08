@@ -49,7 +49,7 @@ define( 'DB_COLLATE', '' );
  * @since 2.6.0
  */
 
-
+{{ salt.stdout }}
 /**#@-*/
 
 /**
@@ -75,9 +75,6 @@ $table_prefix = 'wp_';
 define( 'WP_DEBUG', false );
 
 /* Add any custom values between this line and the "stop editing" line. */
-
-/*define('WP_HOME','http://{{inventory_hostname}}/');
-/*define('WP_SITEURL','http://{{inventory_hostname}}/');
 
 
 /* That's all, stop editing! Happy publishing. */

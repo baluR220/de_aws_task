@@ -18,3 +18,9 @@
 
 - name: mount nfs 
   command: mount /srv/www/wordpress/wp-content/uploads
+
+- name: ensure uploads directory is owned by www-data
+  file:
+    path: /srv/www/wordpress/wp-content/uploads
+    state: directory
+    owner: www-data
